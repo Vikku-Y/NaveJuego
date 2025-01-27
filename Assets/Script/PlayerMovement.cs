@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.PlayerSettings;
 
@@ -9,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public float camBorderX;
     public float camBorderY;
 
-    // Update is called once per frame
+    private int upgradeTier = 0;
     void Update()
     {
         float h = Input.GetAxis("Horizontal");
@@ -18,10 +19,40 @@ public class PlayerMovement : MonoBehaviour
 
         transform.localRotation = new Quaternion(-0.2f * v, transform.localRotation.y, -0.1f * h, transform.localRotation.w);
 
-        //Boost (To be tied to part wings)
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        //Upgrade (For testing)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z - 2);
+            upgradeTier++;
+            transform.Find("Upgrade" + upgradeTier).GameObject().SetActive(true);
+        }
+
+        /*switch (upgrade)
+        {
+            case 1:
+                transform.Find("Upgrade1").GameObject().SetActive(true);
+                break;
+            case 2:
+                transform.Find("Upgrade1").GameObject().SetActive(true);
+                break;
+        }*/
+
+        //Boost
+        if (Input.GetKeyDown(KeyCode.LeftShift) && upgradeTier >= 2)
+        {
+            transform.parent.GameObject().GetComponent<Animator>().SetBool("Boosting", true);
+            moveSpeed += 2;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift) && upgradeTier >= 2)
+        {
+            transform.parent.GameObject().GetComponent<Animator>().SetBool("Boosting", false);
+            moveSpeed -= 2;  // <--------------------- LAST CHANGE
+        }
+
+        //Brake
+        if (Input.GetKeyDown(KeyCode.LeftControl) && upgradeTier >= 2)
+        {
+
         }
     }
 
