@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,10 +10,16 @@ public class CameraBob : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player.transform.position.y > 3 || player.transform.position.y < -3)
+        float offset = 0.015f;
+        if (player.transform.localPosition.y > 3)
         {
-            //NO LMAO
-            transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, -0.1f * player.transform.position.y, transform.rotation.w);
+            transform.localRotation = new Quaternion((-0.005f * player.transform.localPosition.y) + offset, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w);
+        } else if (player.transform.localPosition.y < -3)
+        {
+            transform.localRotation = new Quaternion((-0.005f * player.transform.localPosition.y) - offset, transform.localRotation.y, transform.localRotation.z, transform.localRotation.w);
+        } else
+        {
+            transform.localRotation = Quaternion.identity;
         }
     }
 }
