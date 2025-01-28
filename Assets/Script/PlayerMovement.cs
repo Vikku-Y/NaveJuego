@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.XR;
 using UnityEngine;
 using static UnityEditor.PlayerSettings;
 
@@ -9,6 +10,10 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed;
     public float camBorderX;
     public float camBorderY;
+    public float speedMod;
+
+    private bool boosting = false;
+    private bool braking = false;
 
     private int upgradeTier = 0;
     void Update()
@@ -26,33 +31,50 @@ public class PlayerMovement : MonoBehaviour
             transform.Find("Upgrade" + upgradeTier).GameObject().SetActive(true);
         }
 
-        /*switch (upgrade)
-        {
-            case 1:
-                transform.Find("Upgrade1").GameObject().SetActive(true);
-                break;
-            case 2:
-                transform.Find("Upgrade1").GameObject().SetActive(true);
-                break;
-        }*/
-
         //Boost
-        if (Input.GetKeyDown(KeyCode.LeftShift) && upgradeTier >= 2)
+        if (upgradeTier >= 2 && Input.GetKeyDown(KeyCode.LeftShift) && !braking)
         {
+            boosting = true;
+
             transform.parent.GameObject().GetComponent<Animator>().SetBool("Boosting", true);
-            moveSpeed += 2;
+            transform.Find("Upgrade1").GameObject().GetComponent<Animator>().SetBool("Boosting", true);
+
+            transform.parent.parent.GameObject().GetComponent<MoveCamera>().camSpeed *= speedMod;
+            moveSpeed *= speedMod;
         }
 
-        if (Input.GetKeyUp(KeyCode.LeftShift) && upgradeTier >= 2)
+        if (upgradeTier >= 2 && Input.GetKeyUp(KeyCode.LeftShift) && !braking)
         {
+            boosting = false;
+
             transform.parent.GameObject().GetComponent<Animator>().SetBool("Boosting", false);
-            moveSpeed -= 2;  // <--------------------- LAST CHANGE
+            transform.Find("Upgrade1").GameObject().GetComponent<Animator>().SetBool("Boosting", false);
+
+            transform.parent.parent.GameObject().GetComponent<MoveCamera>().camSpeed /= speedMod;
+            moveSpeed /= speedMod;
         }
 
         //Brake
-        if (Input.GetKeyDown(KeyCode.LeftControl) && upgradeTier >= 2)
+        if (upgradeTier >= 1 && Input.GetKeyDown(KeyCode.LeftControl) && !boosting)
         {
+            braking = true;
 
+            transform.parent.GameObject().GetComponent<Animator>().SetBool("Braking", true);
+            transform.Find("Upgrade1").GameObject().GetComponent<Animator>().SetBool("Braking", true);
+
+            transform.parent.parent.GameObject().GetComponent<MoveCamera>().camSpeed /= speedMod;
+            moveSpeed /= speedMod;
+        }
+
+        if (upgradeTier >= 1 && Input.GetKeyUp(KeyCode.LeftControl) && !boosting)
+        {
+            braking = false;
+
+            transform.parent.GameObject().GetComponent<Animator>().SetBool("Braking", false);
+            transform.Find("Upgrade1").GameObject().GetComponent<Animator>().SetBool("Braking", false);
+
+            transform.parent.parent.GameObject().GetComponent<MoveCamera>().camSpeed *= speedMod;
+            moveSpeed *= speedMod;
         }
     }
 
