@@ -22,4 +22,6 @@ public class CameraBob : MonoBehaviour
             transform.localRotation = Quaternion.identity;
         }
     }
+
+    //lerp: auto "transicion" de movimiento
 }
