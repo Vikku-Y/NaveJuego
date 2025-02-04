@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class BulletClass : MonoBehaviour
 {
-    public float bulletSpeed, bulletDamage, bulletFireRate, bulletDistance;
+    public float bulletSpeed, bulletFireRate, bulletDistance;
+    public int bulletDamage;
     private GameObject player;
     // Start is called before the first frame update
     void Start()

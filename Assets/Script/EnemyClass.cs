@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyClass : MonoBehaviour
 {
+    public int health;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +14,22 @@ public class EnemyClass : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            damage(collision.gameObject.GetComponent<BulletClass>().bulletDamage);
+        }
+    }
+
+    public void damage(int damage)
+    {
+        health -= damage;
     }
 }

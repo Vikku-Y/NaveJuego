@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3032668425221409397}
   - component: {fileID: 927908590840092894}
   m_Layer: 7
-  m_Name: Bullet
+  m_Name: EnemyBullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1c658c28bd60cb342a5cb21fca0df046, type: 2}
+  - {fileID: 2100000, guid: 62b764a8ac1c1df488311289ef82eff1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -147,10 +147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fb1d6a4129ad4343bbf4d505a9eea2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 100
-  bulletDamage: 1
-  bulletFireRate: 0.25
+  bulletSpeed: 75
+  bulletFireRate: 0.5
   bulletDistance: 70
+  bulletDamage: 1
 --- !u!1 &3904099027242619994
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,8 +247,8 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.9716981, g: 0.01375042, b: 0.01375042, a: 1}
-      key1: {r: 0.9716981, g: 0.01375042, b: 0.01375042, a: 1}
+      key0: {r: 0.10196079, g: 0.68235296, b: 0.121568635, a: 1}
+      key1: {r: 0.10196079, g: 0.68235296, b: 0.121568635, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
