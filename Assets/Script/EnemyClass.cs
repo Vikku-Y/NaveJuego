@@ -24,12 +24,7 @@ public class EnemyClass : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            damage(collision.gameObject.GetComponent<BulletClass>().bulletDamage);
+            health -= collision.gameObject.GetComponent<BulletClass>().bulletDamage;
         }
-    }
-
-    public void damage(int damage)
-    {
-        health -= damage;
     }
 }

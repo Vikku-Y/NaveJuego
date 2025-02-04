@@ -824,8 +824,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f111726a7f5a5f44b6585ae6d804347, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 20
   moveSpeed: 15
-  camBorderX: 9.5
+  camBorderX: 8.5
   camBorderY: 5
   speedMod: 1.5
 --- !u!1 &477416813
@@ -3381,7 +3382,7 @@ MonoBehaviour:
   hitpoint: {x: 0, y: 0, z: 0}
   layerMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 311
 --- !u!1 &1565584886
 GameObject:
   m_ObjectHideFlags: 0

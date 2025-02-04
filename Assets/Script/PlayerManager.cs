@@ -7,6 +7,7 @@ using static UnityEditor.PlayerSettings;
 
 public class PlayerManager : MonoBehaviour
 {
+    public int health;
     public float moveSpeed;
     public float camBorderX;
     public float camBorderY;
@@ -18,6 +19,11 @@ public class PlayerManager : MonoBehaviour
     private int upgradeTier = 0;
     void Update()
     {
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
         LocalMove(h, v, moveSpeed);
@@ -102,6 +108,13 @@ public class PlayerManager : MonoBehaviour
         else if (transform.localPosition.y < -camBorderY)
         {
             transform.localPosition = new Vector3(transform.localPosition.x, -camBorderY, transform.localPosition.z);
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            health -= collision.gameObject.GetComponent<BulletClass>().bulletDamage;
         }
     }
 }
