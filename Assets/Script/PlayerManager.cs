@@ -13,11 +13,16 @@ public class PlayerManager : MonoBehaviour
     public float camBorderY;
     public float speedMod;
 
-    private bool boosting = false;
-    private bool braking = false;
-    private bool blocking = false;
+    public bool boosting = false;
+    public bool braking = false;
+    public bool blocking = false;
+    public bool blockOnCooldown = false;
+    public bool blockRelease = false;
 
     private int upgradeTier = 0;
+    private float storedDamage = 100;
+    public GameObject counterHitbox;
+
     void Update()
     {
         if (health <= 0)
@@ -35,7 +40,7 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             upgradeTier++;
-            transform.Find("Upgrade" + upgradeTier).GameObject().SetActive(true);
+            transform.Find("Nave").Find("Upgrade" + upgradeTier).GameObject().SetActive(true);
         }
 
         //Boost
@@ -43,21 +48,21 @@ public class PlayerManager : MonoBehaviour
         {
             boosting = true;
 
-            transform.parent.GameObject().GetComponent<Animator>().SetBool("Boosting", true);
+            transform.Find("Nave").GameObject().GetComponent<Animator>().SetBool("Boosting", true);
             transform.parent.parent.Find("CameraZone").GameObject().GetComponent<Animator>().SetBool("Boosting", true);
-            transform.Find("Upgrade1").GameObject().GetComponent<Animator>().SetBool("Boosting", true);
+            transform.Find("Nave").Find("Upgrade1").GameObject().GetComponent<Animator>().SetBool("Boosting", true);
 
             transform.parent.parent.GameObject().GetComponent<MoveCamera>().camSpeed *= speedMod;
             moveSpeed *= speedMod;
         }
 
-        if (upgradeTier >= 2 && Input.GetKeyUp(KeyCode.LeftShift) && !braking && !blocking)
+        if (upgradeTier >= 2 && Input.GetKeyUp(KeyCode.LeftShift) && !braking && !blocking && boosting)
         {
             boosting = false;
 
-            transform.parent.GameObject().GetComponent<Animator>().SetBool("Boosting", false);
+            transform.Find("Nave").GameObject().GetComponent<Animator>().SetBool("Boosting", false);
             transform.parent.parent.Find("CameraZone").GameObject().GetComponent<Animator>().SetBool("Boosting", false);
-            transform.Find("Upgrade1").GameObject().GetComponent<Animator>().SetBool("Boosting", false);
+            transform.Find("Nave").Find("Upgrade1").GameObject().GetComponent<Animator>().SetBool("Boosting", false);
 
             transform.parent.parent.GameObject().GetComponent<MoveCamera>().camSpeed /= speedMod;
             moveSpeed /= speedMod;
@@ -68,41 +73,44 @@ public class PlayerManager : MonoBehaviour
         {
             braking = true;
 
-            transform.parent.GameObject().GetComponent<Animator>().SetBool("Braking", true);
+            transform.Find("Nave").GameObject().GetComponent<Animator>().SetBool("Braking", true);
             transform.parent.parent.Find("CameraZone").GameObject().GetComponent<Animator>().SetBool("Braking", true);
-            transform.Find("Upgrade1").GameObject().GetComponent<Animator>().SetBool("Braking", true);
+            transform.Find("Nave").Find("Upgrade1").GameObject().GetComponent<Animator>().SetBool("Braking", true);
 
             transform.parent.parent.GameObject().GetComponent<MoveCamera>().camSpeed /= speedMod;
             moveSpeed /= speedMod;
         }
 
-        if (upgradeTier >= 1 && Input.GetKeyUp(KeyCode.LeftControl) && !boosting && !blocking)
+        if (upgradeTier >= 1 && Input.GetKeyUp(KeyCode.LeftControl) && !boosting && !blocking && braking)
         {
             braking = false;
 
-            transform.parent.GameObject().GetComponent<Animator>().SetBool("Braking", false);
+            transform.Find("Nave").GameObject().GetComponent<Animator>().SetBool("Braking", false);
             transform.parent.parent.Find("CameraZone").GameObject().GetComponent<Animator>().SetBool("Braking", false);
-            transform.Find("Upgrade1").GameObject().GetComponent<Animator>().SetBool("Braking", false);
+            transform.Find("Nave").Find("Upgrade1").GameObject().GetComponent<Animator>().SetBool("Braking", false);
 
             transform.parent.parent.GameObject().GetComponent<MoveCamera>().camSpeed *= speedMod;
             moveSpeed *= speedMod;
         }
 
-        //Counter
-        if (upgradeTier >= 2 && Input.GetMouseButtonDown(1) && !boosting && !braking)
+        //Block
+        if (upgradeTier >= 2 && Input.GetMouseButtonDown(1) && !boosting && !braking && !blockOnCooldown)
         {
             blocking = true;
 
-            transform.parent.GameObject().GetComponent<Animator>().SetBool("Blocking", true);
-            transform.Find("Upgrade3").GameObject().GetComponent<Animator>().SetBool("Blocking", true);
+            transform.Find("Nave").GameObject().GetComponent<Animator>().SetBool("Blocking", true);
+            transform.Find("Nave").Find("Upgrade3").GameObject().GetComponent<Animator>().SetBool("Blocking", true);
+
+            StartCoroutine(blockReleaseTimer());
         }
 
-        if (upgradeTier >= 2 && Input.GetMouseButtonUp(1) && !boosting && !braking)
+        if ((upgradeTier >= 2 && Input.GetMouseButtonUp(1) || blockRelease)&& !boosting && !braking && blocking)
         {
             blocking = false;
+            blockRelease = false;
 
-            transform.parent.GameObject().GetComponent<Animator>().SetBool("Blocking", false);
-            transform.Find("Upgrade3").GameObject().GetComponent<Animator>().SetBool("Blocking", false);
+            transform.Find("Nave").GameObject().GetComponent<Animator>().SetBool("Blocking", false);
+            transform.Find("Nave").Find("Upgrade3").GameObject().GetComponent<Animator>().SetBool("Blocking", false);
         }
     }
 
@@ -132,11 +140,57 @@ public class PlayerManager : MonoBehaviour
             transform.localPosition = new Vector3(transform.localPosition.x, -camBorderY, transform.localPosition.z);
         }
     }
+
+    public void releaseCounter()
+    {
+        counterHitbox.SetActive(true);
+
+        counterHitbox.GetComponent<BulletClass>().bulletDamage = storedDamage;
+        float speed = counterHitbox.GetComponent<BulletClass>().bulletSpeed;
+
+        counterHitbox.GetComponent<Rigidbody>().AddForce(Vector3.forward * speed, ForceMode.VelocityChange);
+    }
+
+    public void retreatCounter()
+    {
+        counterHitbox.GetComponent<BulletClass>().bulletDamage = 0;
+        storedDamage = 0;
+
+        counterHitbox.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        counterHitbox.transform.localPosition = Vector3.zero;
+
+        counterHitbox.SetActive(false);
+        StartCoroutine(blockCooldown());
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
+        float dmg = collision.gameObject.GetComponent<BulletClass>().bulletDamage;
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            health -= collision.gameObject.GetComponent<BulletClass>().bulletDamage;
+            if (blocking)
+            {
+                dmg /= 2;
+                storedDamage += dmg;
+            }
+
+            health -= dmg;
         }
+    }
+
+    IEnumerator blockCooldown()
+    {
+        blockOnCooldown = true;
+
+        yield return new WaitForSeconds(3);
+
+        blockOnCooldown = false;
+    }
+
+    IEnumerator blockReleaseTimer()
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        blockRelease = true;
     }
 }

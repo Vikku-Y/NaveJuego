@@ -4,14 +4,8 @@ using UnityEngine;
 
 public class EnemyClass : MonoBehaviour
 {
-    public int health;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float health;
 
-    // Update is called once per frame
     void Update()
     {
         if (health <= 0)
@@ -25,6 +19,14 @@ public class EnemyClass : MonoBehaviour
         if (collision.gameObject.CompareTag("Bullet"))
         {
             health -= collision.gameObject.GetComponent<BulletClass>().bulletDamage;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Bullet"))
+        {
+            health -= other.gameObject.GetComponent<BulletClass>().bulletDamage;
         }
     }
 }
