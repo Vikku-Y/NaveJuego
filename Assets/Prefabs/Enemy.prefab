@@ -44,8 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 541d3e61db4f11e46a3b4be6cd17489f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activated: 0
   bullet: {fileID: 3887577683601747373, guid: 4474dd888c3ba2749939d6780b48b162, type: 3}
-  deviation: 4
+  deviation: 2
   layerMask:
     serializedVersion: 2
     m_Bits: 119
@@ -93,8 +94,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 541d3e61db4f11e46a3b4be6cd17489f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activated: 0
   bullet: {fileID: 3887577683601747373, guid: 4474dd888c3ba2749939d6780b48b162, type: 3}
-  deviation: 4
+  deviation: 2
   layerMask:
     serializedVersion: 2
     m_Bits: 119
@@ -218,4 +220,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15573e61a84211d459b5e1a41c599cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 30
+  health: 300
+  speed: 10
+  movingEnemyX: 0

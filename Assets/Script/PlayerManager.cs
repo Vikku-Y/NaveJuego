@@ -20,14 +20,14 @@ public class PlayerManager : MonoBehaviour
     public bool blockRelease = false;
 
     private int upgradeTier = 0;
-    private float storedDamage = 100;
+    public float storedDamage = 0;
     public GameObject counterHitbox;
 
     void Update()
     {
         if (health <= 0)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         float h = Input.GetAxis("Horizontal");
@@ -39,8 +39,7 @@ public class PlayerManager : MonoBehaviour
         //Upgrade (For testing)
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            upgradeTier++;
-            transform.Find("Nave").Find("Upgrade" + upgradeTier).GameObject().SetActive(true);
+            upgradeShip();
         }
 
         //Boost
@@ -104,7 +103,7 @@ public class PlayerManager : MonoBehaviour
             StartCoroutine(blockReleaseTimer());
         }
 
-        if ((upgradeTier >= 2 && Input.GetMouseButtonUp(1) || blockRelease)&& !boosting && !braking && blocking)
+        if (upgradeTier >= 2 && (Input.GetMouseButtonUp(1) || blockRelease) && !boosting && !braking && blocking)
         {
             blocking = false;
             blockRelease = false;
@@ -141,6 +140,15 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public void upgradeShip()
+    {
+        if (upgradeTier < 3)
+        {
+            upgradeTier++;
+            transform.Find("Nave").Find("Upgrade" + upgradeTier).GameObject().SetActive(true);
+        }
+    }
+
     public void releaseCounter()
     {
         counterHitbox.SetActive(true);
@@ -170,8 +178,8 @@ public class PlayerManager : MonoBehaviour
         {
             if (blocking)
             {
-                dmg /= 2;
                 storedDamage += dmg;
+                dmg /= 10;
             }
 
             health -= dmg;
