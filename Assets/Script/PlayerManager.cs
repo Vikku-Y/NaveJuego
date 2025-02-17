@@ -19,8 +19,11 @@ public class PlayerManager : MonoBehaviour
     public bool blockOnCooldown = false;
     public bool blockRelease = false;
 
+    public GameObject slashParticle;
+    public GameObject gameplayBox;
+
     private int upgradeTier = 0;
-    public float storedDamage = 0;
+    private float storedDamage = 0;
     public GameObject counterHitbox;
 
     void Update()
@@ -157,6 +160,8 @@ public class PlayerManager : MonoBehaviour
         float speed = counterHitbox.GetComponent<BulletClass>().bulletSpeed;
 
         counterHitbox.GetComponent<Rigidbody>().AddForce(Vector3.forward * speed, ForceMode.VelocityChange);
+
+        Instantiate(slashParticle, transform.position, transform.rotation, gameplayBox.transform);
     }
 
     public void retreatCounter()
