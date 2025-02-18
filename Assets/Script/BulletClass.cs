@@ -6,16 +6,15 @@ public class BulletClass : MonoBehaviour
 {
     public float bulletSpeed, bulletFireRate, bulletDistance, bulletDamage;
     private GameObject player;
-    // Start is called before the first frame update
+
     void Start()
     {
         player = GameObject.Find("Nave");
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Vector3.Distance(transform.position, player.transform.position) > 100)
+        if (player == null || (Vector3.Distance(transform.position, player.transform.position) > 100 && gameObject.name != "CounterHitbox"))
         {
             Destroy(gameObject);
         }
@@ -23,6 +22,8 @@ public class BulletClass : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Destroy(gameObject);
+        if (gameObject.name != "CounterHitbox") Destroy(gameObject);
     }
+
+    //audioMixer.SetFloat("MusicVolume", Mathf.Log10(volume) * 30);
 }

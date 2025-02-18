@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -7,11 +8,14 @@ using static UnityEditor.PlayerSettings;
 
 public class PlayerManager : MonoBehaviour
 {
+    public float maxHealth;
     public float health;
     public float moveSpeed;
     public float camBorderX;
     public float camBorderY;
     public float speedMod;
+    public float counterDuration;
+    public float counterCooldown;
 
     public bool boosting = false;
     public bool braking = false;
@@ -25,6 +29,11 @@ public class PlayerManager : MonoBehaviour
     private int upgradeTier = 0;
     private float storedDamage = 0;
     public GameObject counterHitbox;
+
+    private void Start()
+    {
+        health = maxHealth;
+    }
 
     void Update()
     {
@@ -103,6 +112,7 @@ public class PlayerManager : MonoBehaviour
             transform.Find("Nave").GameObject().GetComponent<Animator>().SetBool("Blocking", true);
             transform.Find("Nave").Find("Upgrade3").GameObject().GetComponent<Animator>().SetBool("Blocking", true);
 
+            slashParticle.SetActive(false);
             StartCoroutine(blockReleaseTimer());
         }
 
@@ -161,7 +171,10 @@ public class PlayerManager : MonoBehaviour
 
         counterHitbox.GetComponent<Rigidbody>().AddForce(Vector3.forward * speed, ForceMode.VelocityChange);
 
-        Instantiate(slashParticle, transform.position, transform.rotation, gameplayBox.transform);
+        slashParticle.transform.position = transform.position;
+        slashParticle.SetActive(true);
+
+        StartCoroutine(blockCooldown());
     }
 
     public void retreatCounter()
@@ -173,7 +186,7 @@ public class PlayerManager : MonoBehaviour
         counterHitbox.transform.localPosition = Vector3.zero;
 
         counterHitbox.SetActive(false);
-        StartCoroutine(blockCooldown());
+        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -184,10 +197,11 @@ public class PlayerManager : MonoBehaviour
             if (blocking)
             {
                 storedDamage += dmg;
-                dmg /= 10;
+            } else
+            {
+                health -= dmg;
+                UIManager.instance.hpBar.fillAmount = ((health * 100) / maxHealth) / 100;
             }
-
-            health -= dmg;
         }
     }
 
@@ -195,15 +209,29 @@ public class PlayerManager : MonoBehaviour
     {
         blockOnCooldown = true;
 
-        yield return new WaitForSeconds(3);
+        UIManager.instance.counterBar.fillAmount = 0;
+        StartCoroutine(fillCounterBar());
+
+        yield return new WaitForSeconds(counterCooldown);
 
         blockOnCooldown = false;
     }
 
     IEnumerator blockReleaseTimer()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(counterDuration);
 
         blockRelease = true;
+    }
+
+    IEnumerator fillCounterBar()
+    {
+        for (int i = 0; i <= 100; i++)
+        {
+            float percentage = i;
+            UIManager.instance.counterBar.fillAmount = percentage / 100;
+
+            yield return new WaitForSeconds(counterCooldown/100);
+        }
     }
 }
