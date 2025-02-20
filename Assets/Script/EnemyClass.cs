@@ -8,8 +8,8 @@ public class EnemyClass : MonoBehaviour
     public float speed;
 
     public bool movingEnemyX;
+    public bool movingEnemyY;
 
-    private GameObject player;
     private float targetPosition;
 
     void Start()
@@ -18,8 +18,11 @@ public class EnemyClass : MonoBehaviour
         {
             targetPosition = -transform.position.x;
         }
-        
-        player = GameObject.Find("NaveControl").gameObject;
+
+        if (movingEnemyY)
+        {
+            targetPosition = -transform.position.y;
+        }
     }
 
     void Update()
@@ -34,10 +37,21 @@ public class EnemyClass : MonoBehaviour
             }
         }
 
+        if (movingEnemyY)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, targetPosition, transform.position.z), speed * Time.deltaTime);
+
+            if (transform.position.y <= -7 || transform.position.y >= 14)
+            {
+                targetPosition = -transform.position.y + 7;
+            }
+        }
+
         if (health <= 0)
         {
-            player.GetComponent<PlayerManager>().upgradeShip();
-            player.GetComponent<PlayerManager>().health+= 50;
+            PlayerManager.Instance.UpgradeShip();
+            PlayerManager.Instance.health+= 20;
+            PlayerManager.Instance.UpdateHP();
             Destroy(gameObject);
         }
     }

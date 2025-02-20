@@ -5,29 +5,29 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager instance;
+    public static UIManager Instance;
 
     public Image hpBar;
-    public Image counterBar;
+    public Image energyBar;
 
     private void Awake()
     {
-        if (instance != null && instance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(this);
         }
         else
         {
-            instance = this;
+            Instance = this;
         }
     }
 
     void Start()
     {
         hpBar.type = Image.Type.Filled;
-        counterBar.type = Image.Type.Filled;
+        energyBar.type = Image.Type.Filled;
 
         hpBar.fillMethod = Image.FillMethod.Horizontal;
-        counterBar.fillMethod = Image.FillMethod.Horizontal;
+        energyBar.fillMethod = Image.FillMethod.Horizontal;
     }
 }

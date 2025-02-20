@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 541d3e61db4f11e46a3b4be6cd17489f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activated: 0
+  activated: 1
   bullet: {fileID: 3887577683601747373, guid: 4474dd888c3ba2749939d6780b48b162, type: 3}
   deviation: 2
   layerMask:
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 541d3e61db4f11e46a3b4be6cd17489f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activated: 0
+  activated: 1
   bullet: {fileID: 3887577683601747373, guid: 4474dd888c3ba2749939d6780b48b162, type: 3}
   deviation: 2
   layerMask:
@@ -153,7 +153,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6871960839440929633}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -223,3 +223,4 @@ MonoBehaviour:
   health: 300
   speed: 10
   movingEnemyX: 0
+  movingEnemyY: 0

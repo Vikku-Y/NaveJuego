@@ -45,6 +45,7 @@ public class EnemyShoot : MonoBehaviour
         }
 
         hitpoint = new Vector3(player.transform.position.x + xDeviation, player.transform.position.y + yDeviation, player.transform.position.z + 2);
+        hitpoint += new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * 2.5f;
 
         GameObject newBullet = Instantiate(bullet, transform.position, Quaternion.identity);
         Vector3 bulletDirection = transform.position - hitpoint;

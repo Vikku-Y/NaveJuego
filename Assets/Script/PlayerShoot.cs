@@ -11,24 +11,21 @@ public class PlayerShoot : MonoBehaviour
     public Vector3 hitpoint;
     public LayerMask layerMask;
 
-    private PlayerManager player;
-
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.Find("NaveControl").GetComponent<PlayerManager>();
         bulletFireRate = bullet.GetComponent<BulletClass>().bulletFireRate;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !player.blocking)
+        if (Input.GetMouseButtonDown(0) && !PlayerManager.Instance.blocking)
         {
             InvokeRepeating("bulletShoot", 0, bulletFireRate);
         }
 
-        if (Input.GetMouseButtonUp(0) || player.blocking)
+        if (Input.GetMouseButtonUp(0) || PlayerManager.Instance.blocking)
         {
             CancelInvoke("bulletShoot");
         }
