@@ -40,4 +40,9 @@ public class GameStateManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void StartGame()
+    {
+        SceneManager.LoadScene("SampleScene");
+    }
 }
