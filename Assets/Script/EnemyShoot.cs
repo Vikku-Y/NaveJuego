@@ -24,7 +24,7 @@ public class EnemyShoot : MonoBehaviour
 
     void Update()
     {
-        if (activated && player.activeSelf) { 
+        if (activated && !GameStateManager.Instance.defeated) { 
             StartCoroutine(bulletShoot());
         }
         

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.XR;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static UnityEditor.PlayerSettings;
 
 public class PlayerManager : MonoBehaviour
@@ -18,12 +19,13 @@ public class PlayerManager : MonoBehaviour
     public float timeForEnergyRegen;
     private float maxEnergyBar = 100;
     private float energyBar = 100;
+    private float enemiesDefeated = 0;
 
-    public bool boosting = false;
-    public bool braking = false;
-    public bool blocking = false;
-    public bool blockOnCooldown = false;
-    public bool blockRelease = false;
+    public bool boosting { get; private set; }
+    public bool braking { get; private set; }
+    public bool blocking { get; private set; }
+    public bool blockOnCooldown { get; private set; }
+    public bool blockRelease { get; private set; }
 
     public GameObject slashParticle;
     public GameObject gameplayBox;
@@ -51,26 +53,32 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         health = maxHealth;
+        boosting = false;
+        braking = false;
+        blocking = false;
+        blockOnCooldown = false;
+        blockRelease = false;
     }
 
     void Update()
     {
-        if (health <= 0)
+        if (health <= 0 && !GameStateManager.Instance.defeated)
         {
-            gameObject.SetActive(false);
+            gameObject.GetComponentInChildren<Renderer>().enabled = false;
+            gameObject.GetComponentInChildren<Collider>().enabled = false;
+            GameStateManager.Instance.Defeat();
+            health = 1;
         }
+
+        /*if (Input.GetKeyDown(KeyCode.U)) { 
+            UpgradeShip();
+        }*/
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
         LocalMove(h, v, moveSpeed);
 
         transform.localRotation = new Quaternion(-0.2f * v, transform.localRotation.y, -0.1f * h, transform.localRotation.w);
-
-        //Upgrade (For testing)
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            UpgradeShip();
-        }
 
         //Boost
         if (upgradeTier >= 2 && Input.GetKeyDown(KeyCode.LeftShift) && !braking && !blocking && energyBar > 10)
@@ -230,6 +238,16 @@ public class PlayerManager : MonoBehaviour
     public void UpdateHP()
     {
         UIManager.Instance.hpBar.fillAmount = ((health * 100) / maxHealth) / 100;
+    }
+
+    public void EnemyDefeated()
+    {
+        enemiesDefeated++;
+
+        if (enemiesDefeated % 5 == 0)
+        {
+            UpgradeShip();
+        }
     }
 
     private void OnCollisionEnter(Collision collision)

@@ -49,7 +49,7 @@ public class EnemyClass : MonoBehaviour
 
         if (health <= 0)
         {
-            PlayerManager.Instance.UpgradeShip();
+            PlayerManager.Instance.EnemyDefeated();
             PlayerManager.Instance.health+= 20;
             PlayerManager.Instance.UpdateHP();
             Destroy(gameObject);

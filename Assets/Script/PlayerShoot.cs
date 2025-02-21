@@ -20,12 +20,12 @@ public class PlayerShoot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !PlayerManager.Instance.blocking)
+        if (Input.GetMouseButtonDown(0) && !PlayerManager.Instance.blocking && !GameStateManager.Instance.defeated)
         {
             InvokeRepeating("bulletShoot", 0, bulletFireRate);
         }
 
-        if (Input.GetMouseButtonUp(0) || PlayerManager.Instance.blocking)
+        if (Input.GetMouseButtonUp(0) || PlayerManager.Instance.blocking || GameStateManager.Instance.defeated)
         {
             CancelInvoke("bulletShoot");
         }
