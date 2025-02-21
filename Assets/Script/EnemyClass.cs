@@ -9,6 +9,7 @@ public class EnemyClass : MonoBehaviour
 
     public bool movingEnemyX;
     public bool movingEnemyY;
+    public bool spawnable = true;
 
     private float targetPosition;
 

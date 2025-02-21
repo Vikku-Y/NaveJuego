@@ -65,9 +65,9 @@ public class PlayerManager : MonoBehaviour
             health = 1;
         }
 
-        /*if (Input.GetKeyDown(KeyCode.U)) { 
-            UpgradeShip();
-        }*/
+        if (enemiesDefeated >= 19) { 
+            UIManager.Instance.victoryScreen.gameObject.SetActive(true);
+        }
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");

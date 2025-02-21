@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletSpeed: 100
-  bulletFireRate: 0.5
+  bulletFireRate: 0.75
   bulletDistance: 70
   bulletDamage: 10
 --- !u!1 &3904099027242619994

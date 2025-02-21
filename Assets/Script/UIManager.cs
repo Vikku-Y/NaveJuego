@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public Canvas gameUI;
     public Canvas gameOverScreen;
     public Canvas pauseMenu;
+    public Canvas victoryScreen;
 
     public Slider masterVolume;
     public Slider musicVolume;
